@@ -1,0 +1,32 @@
+# Minimal Alacritty config for Go development
+# Using defaults where possible, common changes commented out
+
+# Window settings
+window:
+  # opacity: 0.9
+  # decorations: full
+  padding:
+    x: 2
+    y: 2
+
+# Font configuration
+font:
+  # family: "JetBrains Mono"
+  # family: "Fira Code"
+  # family: "Source Code Pro"
+  size: 12
+
+# Colors (uncomment to customize)
+# colors:
+#   primary:
+#     background: '0x1e1e1e'
+#     foreground: '0xd4d4d4'
+
+# Key bindings for tmux workflow
+key_bindings:
+  # - { key: Return, mods: Super, action: SpawnNewInstance }
+  # - { key: N, mods: Super, action: SpawnNewInstance }
+  
+# Scrolling
+# scrolling:
+#   history: 10000

@@ -1,0 +1,32 @@
+# SSH config - keeping defaults for now
+# Location: ~/.ssh/config
+
+# Connection keepalive (prevents timeouts)
+# Host *
+#     ServerAliveInterval 60
+#     ServerAliveCountMax 3
+
+# Performance optimizations
+# Host *
+#     Compression yes
+#     ControlMaster auto
+#     ControlPath ~/.ssh/master-%r@%h:%p
+#     ControlPersist 10m
+
+# Example server shortcuts
+# Host dev
+#     HostName dev.company.com
+#     User deploy
+#     Port 22
+
+# Example database tunnel
+# Host db-tunnel
+#     HostName bastion.company.com  
+#     User your-username
+#     LocalForward 5432 db.internal:5432
+
+# GitHub
+# Host github.com
+#     HostName github.com
+#     User git
+#     IdentityFile ~/.ssh/id_ed25519
