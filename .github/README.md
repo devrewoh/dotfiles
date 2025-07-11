@@ -4,10 +4,7 @@ Personal configuration files managed with [chezmoi](https://chezmoi.io).
 
 ## Setup
 
-1. **Install chezmoi:**
-   ```bash
-   sh -c "$(curl -fsLS get.chezmoi.io)"
-   ```
+1. **Install chezmoi:** See [chezmoi.io](https://chezmoi.io) for installation instructions
 
 2. **Clone and apply dotfiles:**
    ```bash
@@ -28,8 +25,8 @@ Personal configuration files managed with [chezmoi](https://chezmoi.io).
 ## Included Configurations
 
 - **Shell:** bash with XDG compliance
-- **Terminal:** Alacritty (TOML format)
-- **Editor:** Neovim (minimal, Go-focused)
+- **Terminal:** Alacritty (TOML format)  
+- **Editors:** Neovim (minimal, Go-focused) + micro
 - **Multiplexer:** tmux
 - **Git:** Templated for multi-machine use
 - **SSH:** Security-focused defaults
