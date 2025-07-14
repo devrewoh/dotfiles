@@ -18,3 +18,13 @@ autocmd FileType go nnoremap <buffer> ]d <cmd>lua vim.diagnostic.goto_next()<CR>
 autocmd FileType go nnoremap <buffer> [d <cmd>lua vim.diagnostic.goto_prev()<CR>
 " Enable basic completion (Ctrl+X Ctrl+O)
 set omnifunc=v:lua.vim.lsp.omnifunc
+
+" Auto-pairs for common brackets and quotes
+inoremap { {}<Left>
+inoremap [ []<Left>
+inoremap ( ()<Left>
+inoremap " ""<Left>
+inoremap ' ''<Left>
+inoremap ` ``<Left>
+" Smart brace handling for Go (creates proper block)
+inoremap {<CR> {<CR>}<Esc>O
