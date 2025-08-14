@@ -77,8 +77,13 @@ echo "  User bin directory: $BIN_DIR $([ -d "$BIN_DIR" ] && echo '✓ exists' ||
 if [[ -n "$XDG_RUNTIME_DIR" ]]; then
     echo "  Runtime directory: $XDG_RUNTIME_DIR $([ -d "$XDG_RUNTIME_DIR" ] && echo '✓ exists' || echo '✗ missing')"
     if [[ -d "$XDG_RUNTIME_DIR" ]]; then
-        RUNTIME_PERMS=$(stat -c "%a" "$XDG_RUNTIME_DIR" 2>/dev/null || stat -f "%OLp" "$XDG_RUNTIME_DIR" 2>/dev/null)
-        RUNTIME_OWNER=$(stat -c "%U" "$XDG_RUNTIME_DIR" 2>/dev/null || stat -f "%Su" "$XDG_RUNTIME_DIR" 2>/dev/null)
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            RUNTIME_PERMS=$(stat -f "%OLp" "$XDG_RUNTIME_DIR" 2>/dev/null || echo "unknown")
+            RUNTIME_OWNER=$(stat -f "%Su" "$XDG_RUNTIME_DIR" 2>/dev/null || echo "unknown")
+        else
+            RUNTIME_PERMS=$(stat -c "%a" "$XDG_RUNTIME_DIR" 2>/dev/null || echo "unknown")
+            RUNTIME_OWNER=$(stat -c "%U" "$XDG_RUNTIME_DIR" 2>/dev/null || echo "unknown")
+        fi
         echo "    Permissions: $RUNTIME_PERMS $([ "$RUNTIME_PERMS" = "700" ] && echo '✓ correct' || echo '⚠ should be 700')"
         echo "    Owner: $RUNTIME_OWNER $([ "$RUNTIME_OWNER" = "$USER" ] && echo '✓ correct' || echo '⚠ should be $USER')"
     fi
@@ -126,7 +131,14 @@ echo "Checking for shell config files in $HOME:"
 # Function to check file existence and size
 check_file() {
     if [[ -f "$1" ]]; then
-        echo "  ✓ $1 ($(wc -l < "$1") lines, $(stat -f%z "$1" 2>/dev/null || stat -c%s "$1") bytes)"
+        local lines=$(wc -l < "$1" 2>/dev/null || echo "0")
+        local bytes
+        if [[ "$OSTYPE" == "darwin"* ]]; then
+            bytes=$(stat -f%z "$1" 2>/dev/null || echo "0")
+        else
+            bytes=$(stat -c%s "$1" 2>/dev/null || echo "0")
+        fi
+        echo "  ✓ $1 ($lines lines, $bytes bytes)"
     elif [[ -L "$1" ]]; then
         echo "  ↗ $1 -> $(readlink "$1") (symlink)"
     else
@@ -298,12 +310,45 @@ done
 echo
 echo "=== EDITORS & TEXT TOOLS ==="
 echo "Text editors:"
-for tool in vim nvim nano emacs micro code; do
+
+# Function to safely check tool versions with timeout
+check_tool_version() {
+    local tool="$1"
     if command -v "$tool" >/dev/null 2>&1; then
-        echo "  ✓ $tool: $(command -v "$tool") - $($tool --version 2>/dev/null | head -1 || echo 'version unknown')"
+        local tool_path=$(command -v "$tool")
+        local version_output
+
+        case "$tool" in
+            "nano")
+                # Handle macOS nano->pico symlink gracefully
+                if [[ "$OSTYPE" == "darwin"* ]] && [[ -L "$tool_path" ]]; then
+                    local target=$(readlink "$tool_path")
+                    version_output="→ $target (system symlink)"
+                else
+                    version_output=$(timeout 3s $tool --version 2>/dev/null | head -1 || echo "version check failed")
+                fi
+                ;;
+            "pico")
+                # pico doesn't have --version, just note it exists
+                version_output="(legacy editor, no version info)"
+                ;;
+            "code")
+                # VS Code can be slow
+                version_output=$(timeout 5s $tool --version 2>/dev/null | head -1 || echo "version check timeout")
+                ;;
+            *)
+                # Standard version check with timeout
+                version_output=$(timeout 3s $tool --version 2>/dev/null | head -1 || echo "version unknown")
+                ;;
+        esac
+        echo "  ✓ $tool: $tool_path - $version_output"
     else
         echo "  ✗ $tool: not found"
     fi
+}
+
+for tool in vim nvim nano emacs micro code; do
+    check_tool_version "$tool"
 done
 
 echo
