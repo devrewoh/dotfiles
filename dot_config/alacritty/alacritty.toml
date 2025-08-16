@@ -1,0 +1,11 @@
+# Minimal Alacritty configuration - mostly default with basic improvements
+
+[general]
+live_config_reload = true
+
+[env]
+TERM = "xterm-256color"
+
+# Slightly better font size (default is often too small)
+[font]
+size = 11.0

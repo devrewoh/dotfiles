@@ -1,0 +1,22 @@
+#!/bin/sh
+# Universal Shell Aliases - POSIX Compliant
+
+# XDG compliance
+alias tmux='tmux -f "$XDG_CONFIG_HOME/tmux/tmux.conf"'
+
+# Development shortcuts
+alias v='nvim'
+alias vim='nvim'
+alias g='git'
+
+# Navigation
+alias ..='cd ..'
+alias ...='cd ../..'
+alias l='ls -CF'
+alias ll='ls -alF'
+alias la='ls -A'
+
+# Safety
+alias cp='cp -i'
+alias mv='mv -i'
+alias rm='rm -i'

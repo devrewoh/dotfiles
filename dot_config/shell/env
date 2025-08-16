@@ -1,0 +1,68 @@
+#!/bin/sh
+# Universal Shell Environment - POSIX Compliant
+# Sourced by all shell RC files
+
+# =============================================================================
+# XDG BASE DIRECTORY SPECIFICATION
+# =============================================================================
+
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
+export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
+export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
+
+# =============================================================================
+# EDITOR CONFIGURATION
+# =============================================================================
+
+export EDITOR="nvim"
+export VISUAL="nvim"
+export PAGER="less"
+
+# =============================================================================
+# ASDF CONFIGURATION (XDG COMPLIANT)
+# =============================================================================
+
+export ASDF_DIR="$XDG_DATA_HOME/asdf"
+export ASDF_DATA_DIR="$XDG_DATA_HOME/asdf"
+export ASDF_CONFIG_FILE="$XDG_CONFIG_HOME/asdf/asdfrc"
+
+# =============================================================================
+# TOOL-SPECIFIC XDG COMPLIANCE
+# =============================================================================
+
+export CARGO_HOME="$XDG_DATA_HOME/cargo"
+export RUSTUP_HOME="$XDG_DATA_HOME/rustup"
+export GOPATH="$XDG_DATA_HOME/go"
+export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME/npm/npmrc"
+export NPM_CONFIG_CACHE="$XDG_CACHE_HOME/npm"
+export NODE_REPL_HISTORY="$XDG_DATA_HOME/node_repl_history"
+
+# =============================================================================
+# PATH CONFIGURATION
+# =============================================================================
+# Remove ALL instances of ~/.local/bin first, then add it once
+PATH=$(echo "$PATH" | tr ':' '\n' | grep -v "^$HOME/.local/bin$" | tr '\n' ':' | sed 's/:$//')
+# Add ~/.local/bin to the front
+export PATH="$HOME/.local/bin:$PATH"
+
+# =============================================================================
+# DIRECTORY CREATION
+# =============================================================================
+
+# Ensure XDG directories exist (POSIX way)
+for dir in \
+    "$XDG_CONFIG_HOME" \
+    "$XDG_DATA_HOME" \
+    "$XDG_STATE_HOME" \
+    "$XDG_CACHE_HOME" \
+    "$XDG_CONFIG_HOME/npm" \
+    "$XDG_CACHE_HOME/npm" \
+    "$XDG_DATA_HOME/cargo" \
+    "$XDG_DATA_HOME/rustup" \
+    "$XDG_DATA_HOME/go" \
+    "$XDG_DATA_HOME/asdf" \
+    "$XDG_CONFIG_HOME/asdf"
+do
+    [ ! -d "$dir" ] && mkdir -p "$dir"
+done
