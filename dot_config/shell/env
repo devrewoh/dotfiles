@@ -18,6 +18,7 @@ export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
 export EDITOR="nvim"
 export VISUAL="nvim"
 export PAGER="less"
+export CHEZMOI_EDITOR="micro"
 
 # =============================================================================
 # ASDF CONFIGURATION (XDG COMPLIANT)
