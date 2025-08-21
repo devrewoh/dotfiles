@@ -1,0 +1,12 @@
+
+# MacPorts Installer addition on 2025-08-19_at_13:32:55: adding an appropriate PATH variable for use with MacPorts.
+export PATH="/opt/local/bin:/opt/local/sbin:$PATH"
+# Finished adapting your PATH environment variable for use with MacPorts.
+
+# Added by C.H. - Custom shell configuration
+# Source custom configs
+[ -f "$HOME/.config/shell/path" ] && . "$HOME/.config/shell/path"
+[ -f "$HOME/.config/shell/env" ] && . "$HOME/.config/shell/env"
+[ -f "$HOME/.config/shell/exports" ] && . "$HOME/.config/shell/exports"
+[ -f "$HOME/.config/shell/aliases" ] && . "$HOME/.config/shell/aliases"
+[ -f "$HOME/.config/shell/functions" ] && . "$HOME/.config/shell/functions"
