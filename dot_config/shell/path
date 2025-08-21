@@ -1,0 +1,36 @@
+#!/bin/sh
+# PATH management - Cross-platform unified version
+
+# Detect if we need deduplication (macOS has path_helper that creates duplicates)
+if [ "$(uname -s)" = "Darwin" ]; then
+    # macOS version with deduplication
+    remove_path() {
+        PATH=$(echo "$PATH" | tr ':' '\n' | grep -v "^$1$" | tr '\n' ':' | sed 's/:$//')
+    }
+    
+    prepend_path() {
+        if [ -d "$1" ]; then
+            remove_path "$1"
+            export PATH="$1:$PATH"
+        fi
+    }
+    
+    # Add paths in reverse order of desired priority
+    prepend_path "/opt/local/sbin"
+    prepend_path "/opt/local/bin"
+    prepend_path "$HOME/.local/bin"
+    
+    unset -f prepend_path remove_path
+else
+    # Linux version - simpler, no deduplication needed
+    prepend_path() {
+        if [ -d "$1" ] && ! echo "$PATH" | grep -q ":$1:" && ! echo "$PATH" | grep -q "^$1:" && [ "$PATH" != "$1" ]; then
+            export PATH="$1:$PATH"
+        fi
+    }
+    
+    # XDG-compliant user paths first
+    prepend_path "$HOME/.local/bin"
+    
+    unset -f prepend_path
+fi

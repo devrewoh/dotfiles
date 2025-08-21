@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# Additional exports
+export EDITOR="${EDITOR:-micro}"
+export BROWSER="${BROWSER:-firefox}"
+export TERMINAL="${TERMINAL:-alacritty}"
