@@ -1,0 +1,12 @@
+#!/bin/sh
+# Unified history
+
+export HISTSIZE=10000
+export HISTFILESIZE=20000
+export HISTCONTROL=ignoredups:erasedups
+
+if [ -n "$ZSH_VERSION" ]; then
+    export HISTFILE="$XDG_STATE_HOME/zsh/history"
+elif [ -n "$BASH_VERSION" ]; then
+    export HISTFILE="$XDG_STATE_HOME/bash/history"
+fi
